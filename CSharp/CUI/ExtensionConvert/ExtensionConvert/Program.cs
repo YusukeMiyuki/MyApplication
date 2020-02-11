@@ -24,6 +24,7 @@ namespace ExtensionConvert
         const string c_VsCodePath = @"C:\Users\akada\AppData\Local\Programs\Microsoft VS Code\Code.exe";
         #endregion
 
+        #region Main
         static void Main(string[] args)
         {
             commandParser(args);
@@ -38,6 +39,7 @@ namespace ExtensionConvert
             };
             Process.Start(psi);
         }
+        #endregion
 
         #region コマンドラインパーサー
         /// <summary>
