@@ -1,0 +1,5 @@
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\x64\Debug\ExtensionConvert.exe.config
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\x64\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\x64\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\x64\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\x64\Debug\ExtensionConvert.pdb

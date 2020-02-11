@@ -1,0 +1,16 @@
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.csprojAssemblyReference.cache
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe.config
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\akadamario\MyApplicatioin\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe.config
+C:\Users\akada\source\repos\akadamario\MyApplicatioin\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\akadamario\MyApplicatioin\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\akadamario\MyApplicatioin\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\akadamario\MyApplicatioin\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe.config
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Debug\ExtensionConvert.pdb
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.exe
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Debug\ExtensionConvert.pdb

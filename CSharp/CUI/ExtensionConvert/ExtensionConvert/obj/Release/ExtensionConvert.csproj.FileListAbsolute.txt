@@ -1,0 +1,6 @@
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.exe.config
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.pdb
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Release\ExtensionConvert.exe
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Release\ExtensionConvert.pdb
+C:\Users\akada\source\repos\ExtensionConvert\ExtensionConvert\obj\Release\ExtensionConvert.csprojAssemblyReference.cache
