@@ -19,8 +19,8 @@ namespace ExtensionConvert
     class Program
     {
         #region プライベートメンバ
-        static string mPath;
-        static Extension mConvertExt;
+        static string path;
+        static Extension convertExt;
         const string c_VsCodePath = @"C:\Users\akada\AppData\Local\Programs\Microsoft VS Code\Code.exe";
         #endregion
 
@@ -43,13 +43,13 @@ namespace ExtensionConvert
 
         #region コマンドラインパーサー
         /// <summary>
-        /// コマンドパーサー（いつかクラス化したい）
+        /// コマンドパーサー（これいる？）
         /// </summary>
         /// <param name="args">引数</param>
         static void commandParser(string[] args)
         {
-            mPath = args[0];
-            mConvertExt = args[1] switch
+            path = args[0];
+            convertExt = args[1] switch
             {
                 "-tsv" => Extension.TSV,
                 "-csv" => Extension.CSV,
@@ -65,12 +65,12 @@ namespace ExtensionConvert
         /// <returns>新しいコピー先のファイルパス</returns>
         static string getCopyPath()
         {
-            var regNum = new Regex($@"{Path.GetFileNameWithoutExtension(mPath)}_copy[\d]*\.(csv|tsv)$");
-            var name = Path.GetFileNameWithoutExtension(mPath);
-            var retPath = mConvertExt switch
+            var regNum = new Regex($@"{Path.GetFileNameWithoutExtension(path)}_copy[\d]*\.(csv|tsv)$");
+            var name = Path.GetFileNameWithoutExtension(path);
+            var retPath = convertExt switch
             {
-                Extension.TSV => searchPath($"{Path.Combine(Path.GetDirectoryName(mPath), name)}_copy.tsv"),
-                Extension.CSV => searchPath($"{Path.Combine(Path.GetDirectoryName(mPath), name)}_copy.csv"),
+                Extension.TSV => searchPath($"{Path.Combine(Path.GetDirectoryName(path), name)}_copy.tsv"),
+                Extension.CSV => searchPath($"{Path.Combine(Path.GetDirectoryName(path), name)}_copy.csv"),
                 _ => throw new InvalidOperationException()
             };
             return retPath;

@@ -9,3 +9,5 @@ C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert
 C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.pdb
 C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Release\ExtensionConvert.exe
 C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\obj\Release\ExtensionConvert.pdb
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.exe.CodeAnalysisLog.xml
+C:\Users\akada\source\repos\akadamario\MyApplication\CSharp\CUI\ExtensionConvert\ExtensionConvert\bin\Release\ExtensionConvert.exe.lastcodeanalysissucceeded
