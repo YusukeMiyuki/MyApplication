@@ -1,4 +1,13 @@
 {
-  "ExpandedNodes": [],
+  "ExpandedNodes": [
+    "",
+    "\\CSharp",
+    "\\CSharp\\GUI\\ToDoTaskManageer",
+    "\\CSharp\\OfficeAddin",
+    "\\CSharp\\OfficeAddin\\Word",
+    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter",
+    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter\\OutDocChapter"
+  ],
+  "SelectedNode": "\\CSharp",
   "PreviewInSolutionExplorer": false
 }
