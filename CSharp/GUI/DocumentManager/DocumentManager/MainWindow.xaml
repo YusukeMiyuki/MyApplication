@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="DocumentManager" Height="450" Width="800">
+    <DockPanel>
+        <Menu x:Name="MainMenu" DockPanel.Dock="Top">
+            <MenuItem Header="ファイル">
+                
+            </MenuItem>
+            <MenuItem Header="設定">
+                
+            </MenuItem>
+            <MenuItem Header="ヘルプ">
+
+            </MenuItem>
+        </Menu>
+        <TreeView x:Name="DocTreeView" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="local:Chapter" ItemsSource="{Binding Path=Chapters}">
+                    <TextBlock Text="{Binding Path=HeadLine}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+    </DockPanel>
 </Window>
