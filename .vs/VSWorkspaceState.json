@@ -2,8 +2,17 @@
   "ExpandedNodes": [
     "",
     "\\CSharp",
-    "\\CSharp\\GUI"
+    "\\CSharp\\ClassLib",
+    "\\CSharp\\ClassLib\\GUI",
+    "\\CSharp\\ClassLib\\GUI\\Framework",
+    "\\CSharp\\ClassLib\\GUI\\Framework\\WpfCustomControlLibrary",
+    "\\CSharp\\GUI",
+    "\\CSharp\\GUI\\DocumentManager",
+    "\\CSharp\\OfficeAddin",
+    "\\CSharp\\OfficeAddin\\Word",
+    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter",
+    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter\\OutDocChapter"
   ],
-  "SelectedNode": "\\CSharp\\OfficeAddin",
+  "SelectedNode": "\\CSharp\\OfficeAddin\\Word\\OutDocChapter\\OutDocChapter\\OutDocChapter.csproj",
   "PreviewInSolutionExplorer": false
 }

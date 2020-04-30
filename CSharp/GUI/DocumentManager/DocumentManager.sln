@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentManager", "DocumentManager\DocumentManager.csproj", "{E1265456-1E8C-4389-A7F7-BCD513637FB7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClassLib", "ClassLib", "{3514452D-1D33-47BC-A781-FD5029F8B6C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfCustomControls", "..\..\ClassLib\GUI\Framework\WpfCustomControlLibrary\WpfCustomControls\WpfCustomControls.csproj", "{24884FD9-2023-4FC1-8539-8FF2A16F8A5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{E1265456-1E8C-4389-A7F7-BCD513637FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1265456-1E8C-4389-A7F7-BCD513637FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1265456-1E8C-4389-A7F7-BCD513637FB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24884FD9-2023-4FC1-8539-8FF2A16F8A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24884FD9-2023-4FC1-8539-8FF2A16F8A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24884FD9-2023-4FC1-8539-8FF2A16F8A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24884FD9-2023-4FC1-8539-8FF2A16F8A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{24884FD9-2023-4FC1-8539-8FF2A16F8A5D} = {3514452D-1D33-47BC-A781-FD5029F8B6C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7AFEE1D2-D86A-4758-B341-94CC447626FA}

@@ -1,24 +1,18 @@
-﻿<Window x:Class="DocumentManager.MainWindow"
+﻿<Window x:Class="DocumentManager.OtherWindows.DocTreeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DocumentManager"
+        xmlns:local="clr-namespace:DocumentManager.OtherWindows"
         mc:Ignorable="d"
-        Title="DocumentManager" Height="450" Width="800">
+        Title="DocTreeWindow" Height="450" Width="200">
     <DockPanel>
         <Menu x:Name="MainMenu" DockPanel.Dock="Top">
-            <MenuItem Header="ファイル">
-                <MenuItem Header="新規作成" Click="menuNewCreate_Click" />
-            </MenuItem>
-            <MenuItem Header="設定">
-                
-            </MenuItem>
-            <MenuItem Header="ヘルプ">
+            <MenuItem Header="章追加">
 
             </MenuItem>
         </Menu>
-        <TreeView x:Name="DocTreeView" DockPanel.Dock="Left" Width="200" HorizontalAlignment="Left">
+        <TreeView x:Name="DocTreeView" Width="200" HorizontalAlignment="Left">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="local:Chapter" ItemsSource="{Binding Path=Chapters}">
                     <TextBlock Text="{Binding Path=HeadLine}"/>
