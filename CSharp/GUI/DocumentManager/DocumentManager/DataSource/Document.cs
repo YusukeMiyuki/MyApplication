@@ -14,13 +14,10 @@ namespace DocumentManager.DataSource
         public string HeadLine => DocName;
         public IReadOnlyList<Chapter> Chapters => mChapters;
 
-        public Document()
+        public Document(string docName)
         {
-            DocName = "TestDoc";
+            DocName = docName;
             mChapters = new List<Chapter>();
-
-            AddChapter("TestChapter");
-            mChapters.First().AddChapter("TestChapter2");
         }
 
         public void AddChapter(string headline) => mChapters.Add(new Chapter(headline));

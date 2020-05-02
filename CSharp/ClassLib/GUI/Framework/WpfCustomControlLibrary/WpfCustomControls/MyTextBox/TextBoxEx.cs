@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,11 +47,94 @@ namespace WpfCustomControls.MyTextBox
     /// </summary>
     public class TextBoxEx : TextBox
     {
+        char[] mNGFileFolder = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+
+        public enum TextKind
+        {
+            None,
+            Integer,
+            FileOrFolderName
+        }
+
+        public TextKind InputTextKind { get; private set; }
+
         static TextBoxEx()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBoxEx), new FrameworkPropertyMetadata(typeof(TextBoxEx)));
         }
 
-        public TextBoxEx() { }
+        public TextBoxEx()
+        {
+            InputTextKind = TextKind.None;
+        }
+
+        public void SetInputTextKind(TextKind tKind)
+        {
+            InputTextKind = tKind;
+            if (ToolTip == null)
+            {   // ToolTip の自動設定
+                var tt = new ToolTip();
+                switch (tKind)
+                {
+                    case TextKind.Integer:
+                        tt.Content = $"入力可能数値は {int.MinValue} - {int.MaxValue} です。";
+                        ToolTip = tt;
+                        break;
+
+                    case TextKind.FileOrFolderName:
+                        tt.Content = $"下記文字列は入力できません。{Environment.NewLine}{string.Join(",", mNGFileFolder)}";
+                        ToolTip = tt;
+                        break;
+
+                    case TextKind.None:
+                    default:
+                        break;
+                }
+            }
+        }
+
+        public bool CheckNGInput(string input)
+        {
+            switch (InputTextKind)
+            {
+                case TextKind.Integer:
+                    // 変換できなければ Int じゃない
+                    var isNegative = Text.Length > 0 && Text[0] == '-';
+                    if (this.CaretIndex == 0 && isNegative == false && input == "-") return false;
+                    var text = Text.Insert(this.CaretIndex, input);
+                    return int.TryParse(text, out _) == false;
+
+                case TextKind.FileOrFolderName:
+                    return input.Any(c => mNGFileFolder.Contains(c));
+
+                case TextKind.None:
+                default:
+                    return false; // チェックなし
+            }
+        }
+
+        int? beforeSelectionStart = null;
+        public void CheckTextChanged()
+        {
+            switch (InputTextKind)
+            {
+                case TextKind.Integer:
+                    if (Text.Contains(" ") == false) return;
+                    if (beforeSelectionStart == null) beforeSelectionStart = this.SelectionStart;
+                    Text = Text.Replace(" ", string.Empty);
+                    if (beforeSelectionStart != null && beforeSelectionStart > 0) this.Select(beforeSelectionStart.Value - 1, 0);
+                    beforeSelectionStart = null;
+                    break;
+
+                case TextKind.FileOrFolderName:
+                    if (Text.Length > 0 && (Text[0] == ' ') == false) return;
+                    Text = Text.TrimStart(new char[] { ' ' });
+                    break;
+
+                case TextKind.None:
+                default:
+                    break;
+            }
+        }
     }
 }

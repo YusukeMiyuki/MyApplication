@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DocumentManager.DataSource;
+using DocumentManager.OtherWindows;
 
 namespace DocumentManager
 {
@@ -22,7 +23,6 @@ namespace DocumentManager
     /// </summary>
     public partial class MainWindow : Window
     {
-
 
         public MainWindow()
         {
@@ -33,7 +33,13 @@ namespace DocumentManager
         {
             try
             {
+                var newCreateDoc = new DocCreateWindow();
+                newCreateDoc.ShowDialog();
+                if (newCreateDoc.DialogResult.Value)
+                {
+                    var doc = new Document(newCreateDoc.NewDocName);
 
+                }
             }
 #if DEBUG
             catch { }

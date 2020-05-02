@@ -19,11 +19,15 @@ namespace DocumentManager.OtherWindows
     /// </summary>
     public partial class DocCreateWindow : Window
     {
-        public string newDocName;
+        public string NewDocName;
 
         public DocCreateWindow()
         {
             InitializeComponent();
+
+            txtNewDocName.SetInputTextKind(WpfCustomControls.MyTextBox.TextBoxEx.TextKind.FileOrFolderName);
+
+            txtNewDocName.Focus();
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
@@ -33,9 +37,12 @@ namespace DocumentManager.OtherWindows
                 if (string.IsNullOrEmpty(txtNewDocName.Text))
                 {
                     // エラー
+                    MessageBox.Show("ドキュメント名が入力されていません。");
                     return;
                 }
-
+                NewDocName = txtNewDocName.Text;
+                DialogResult = true;
+                Close();
             }
             catch { }
             finally { }
@@ -50,7 +57,33 @@ namespace DocumentManager.OtherWindows
 
         private void txtNewDocName_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+            try
+            {
+                // e.Handled を true にすると文字が入力されないようになる
+                e.Handled = txtNewDocName.CheckNGInput(e.Text);
+            }
+            catch { }
+            finally { }
+        }
 
+        private void txtNewDocName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                txtNewDocName.CheckTextChanged();
+            }
+            catch { }
+            finally { }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(NewDocName)) e.Cancel = true;
+            }
+            catch { }
+            finally { }
         }
     }
 }
