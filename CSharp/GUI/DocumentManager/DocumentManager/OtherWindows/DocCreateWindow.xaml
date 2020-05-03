@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:DocumentManager.OtherWindows"
         xmlns:myTxtBox="clr-namespace:WpfCustomControls.MyTextBox;assembly=WpfCustomControls"
         mc:Ignorable="d"
-        Title="DocCreateWindow" Height="130" Width="400"
-        Closing="Window_Closing">
+        Title="DocCreateWindow" Height="130" Width="400">
     <DockPanel>
         <Grid>
             <Grid.RowDefinitions>

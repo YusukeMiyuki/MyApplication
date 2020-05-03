@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WpfCustomControls.MyTextBox
 {
@@ -47,27 +36,61 @@ namespace WpfCustomControls.MyTextBox
     /// </summary>
     public class TextBoxEx : TextBox
     {
-        char[] mNGFileFolder = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
-
+        #region 列挙
+        /// <summary>
+        /// テキストボックスの種類
+        /// </summary>
         public enum TextKind
         {
+            /// <summary>
+            /// 設定なし
+            /// </summary>
             None,
+            /// <summary>
+            /// 整数
+            /// </summary>
             Integer,
+            /// <summary>
+            /// ファイルやフォルダ名
+            /// </summary>
             FileOrFolderName
         }
+        #endregion
 
+        #region プライベートメンバ
+        /// <summary>
+        /// ファイルやフォルダの禁止文字群
+        /// </summary>
+        char[] mNGFileFolder = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+        #endregion
+
+        #region パブリックメンバ
+        /// <summary>
+        /// テキストボックスの種類
+        /// </summary>
         public TextKind InputTextKind { get; private set; }
+        #endregion
 
+        #region コンストラクタ
+        /// <summary>
+        /// これは自動生成されたもの（カスタムコントロールには必須？）
+        /// </summary>
         static TextBoxEx()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(TextBoxEx), new FrameworkPropertyMetadata(typeof(TextBoxEx)));
         }
-
         public TextBoxEx()
         {
             InputTextKind = TextKind.None;
         }
+        #endregion
 
+        #region テキストボックスの種類をセット
+        /// <summary>
+        /// テキストボックスの種類をセットし、それに見合ったツールチップも設定する。
+        /// 既にツールチップがxamlによって設定されている場合、ツールチップは設定されない。
+        /// </summary>
+        /// <param name="tKind">テキストボックスの種類</param>
         public void SetInputTextKind(TextKind tKind)
         {
             InputTextKind = tKind;
@@ -92,7 +115,15 @@ namespace WpfCustomControls.MyTextBox
                 }
             }
         }
+        #endregion
 
+        #region 入力文字にNGがあるかチェック
+        /// <summary>
+        /// 入力文字にNGなものがあるかチェックする。
+        /// PreviewTextInputイベントに使用できる。
+        /// </summary>
+        /// <param name="input">入力文字</param>
+        /// <returns>true: 禁止文字あり、false: 禁止文字なし</returns>
         public bool CheckNGInput(string input)
         {
             switch (InputTextKind)
@@ -112,18 +143,26 @@ namespace WpfCustomControls.MyTextBox
                     return false; // チェックなし
             }
         }
+        #endregion
 
-        int? beforeSelectionStart = null;
+        #region 入力値の空白を調整する
+        /// <summary>
+        /// 前回のフォーカス位置（本メソッドでもTextChangedイベントが発生するため、フォーカス位置を覚えておく）
+        /// </summary>
+        int? mBeforeSelectionStart = null;
+        /// <summary>
+        /// 空白が入力された場合、テキストボックスの種類によって調整する。
+        /// </summary>
         public void CheckTextChanged()
         {
             switch (InputTextKind)
             {
                 case TextKind.Integer:
                     if (Text.Contains(" ") == false) return;
-                    if (beforeSelectionStart == null) beforeSelectionStart = this.SelectionStart;
+                    if (mBeforeSelectionStart == null) mBeforeSelectionStart = this.SelectionStart;
                     Text = Text.Replace(" ", string.Empty);
-                    if (beforeSelectionStart != null && beforeSelectionStart > 0) this.Select(beforeSelectionStart.Value - 1, 0);
-                    beforeSelectionStart = null;
+                    if (mBeforeSelectionStart != null && mBeforeSelectionStart > 0) this.Select(mBeforeSelectionStart.Value - 1, 0);
+                    mBeforeSelectionStart = null;
                     break;
 
                 case TextKind.FileOrFolderName:
@@ -136,5 +175,6 @@ namespace WpfCustomControls.MyTextBox
                     break;
             }
         }
+        #endregion
     }
 }
