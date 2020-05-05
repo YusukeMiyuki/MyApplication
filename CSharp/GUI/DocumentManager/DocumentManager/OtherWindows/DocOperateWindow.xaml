@@ -1,0 +1,28 @@
+﻿<Window x:Class="DocumentManager.OtherWindows.DocOperateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DocumentManager.OtherWindows"
+        xmlns:myTxtBox="clr-namespace:WpfCustomControls.MyTextBox;assembly=WpfCustomControls"
+        xmlns:myDtSrc="clr-namespace:DocumentManager.DataSource"
+        mc:Ignorable="d"
+        Title="DocOpeateWindow" Height="400" Width="400">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem x:Name="miNewDir" Header="newDir" Click="miNewDir_Click"/>
+            <MenuItem x:Name="miNewDoc" Header="newdoc" Click="miNewDoc_Click"/>
+            <MenuItem x:Name="miOpen" Header="open"/>
+        </Menu>
+        <TreeView x:Name="tvDirDoc">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate x:Name="dieData" DataType="{x:Type myDtSrc:Directory}" ItemsSource="{Binding Path=Items}">
+                    <myTxtBox:TextBoxEx x:Name="txtExDir" Text="{Binding Path=DirName}" AllowDrop="False" Loaded="txtEx_Loaded" GotFocus="txtEx_GotFocus" LostFocus="txtExDir_LostFocus" MouseDoubleClick="txtEx_MouseDoubleClick"/>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type myDtSrc:Document}">
+                    <myTxtBox:TextBoxEx x:Name="txtExDoc" Text="{Binding Path=DocName}" AllowDrop="False" Loaded="txtEx_Loaded" GotFocus="txtEx_GotFocus" LostFocus="txtExDoc_LostFocus" MouseDoubleClick="txtEx_MouseDoubleClick"/>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </DockPanel>
+</Window>

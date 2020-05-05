@@ -16,14 +16,14 @@ namespace DocumentManager.DataSource
         /// DB上のドキュメントID
         /// </summary>
         public int DocID { get; private set; }
-
         /// <summary>
         /// DB上の本ドキュメントに紐づく章のID
         /// </summary>
         public int ChaptersID { get; private set; }
         #endregion
-        
+
         #region プライベートメンバ
+        string mInitDocName;
         List<Chapter> mChapters;
         #endregion
 
@@ -31,11 +31,13 @@ namespace DocumentManager.DataSource
         /// <summary>
         /// ドキュメント名
         /// </summary>
-        public string DocName { get; private set; }
+        public string DocName { get; set; }
         /// <summary>
         /// 章
         /// </summary>
         public IReadOnlyList<Chapter> Chapters => mChapters;
+
+        public bool IsChangeDirName => DocName != mInitDocName;
         #endregion
 
         #region コンストラクタ
@@ -46,28 +48,20 @@ namespace DocumentManager.DataSource
         public Document(string docName)
         {
             DocName = docName;
+            mInitDocName = docName;
             mChapters = new List<Chapter>();
         }
         #endregion
 
         #region DB情報セット
-
-        #region ドキュメントIDをセット
         /// <summary>
-        /// ドキュメントIDをセットする
+        /// DB情報をセットする
         /// </summary>
-        /// <param name="id">DBから取得、または作成したID</param>
-        public void SetDocID(int id) => DocID = id;
-        #endregion
-
-        #region 章IDのセット
-        /// <summary>
-        /// 本ドキュメントに紐づく章のIDをセットする
-        /// </summary>
-        /// <param name="id">DBから取得、または作成したID</param>
-        public void SetChaptersID(int id) => ChaptersID = id;
-        #endregion
-
+        public void SetDBInfo(int docId, int chaptersId)
+        {
+            DocID = docId;
+            ChaptersID = chaptersId;
+        }
         #endregion
 
         #region 章の追加

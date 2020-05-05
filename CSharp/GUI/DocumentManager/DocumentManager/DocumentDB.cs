@@ -19,6 +19,29 @@ namespace DocumentManager
     {
         #region 内部クラス
 
+        #region ディレクトリのDB情報クラス
+        /// <summary>
+        /// ディレクトリのテーブル名やカラム名を定数で扱うクラス
+        /// </summary>
+        class DirDBInfo
+        {
+            #region 定数
+            /// <summary>
+            /// ディレクトリテーブル名
+            /// </summary>
+            public const string C_DirTable = "directory";
+
+            #region カラム名
+            public const string C_DirID = "DirID";
+            public const string C_DirName = "DirName";
+            public const string C_DocID = "DocID";
+            public const string C_ChildDirID = "ChildDirID";
+            #endregion
+
+            #endregion
+        }
+        #endregion
+
         #region ドキュメントのDB情報クラス
         /// <summary>
         /// ドキュメントのテーブル名やカラム名を定数で扱うクラス
@@ -125,10 +148,21 @@ namespace DocumentManager
                 {
                     // document Table 作成
                     var sb = new StringBuilder();
+                    sb.Append($"CREATE TABLE IF NOT EXISTS {DirDBInfo.C_DirTable} (");
+                    sb.Append($"{DirDBInfo.C_DirID} INTEGER NOT NULL PRIMARY KEY, ");  // ディレクトリのID、本 Table の主キー
+                    sb.Append($"{DirDBInfo.C_DirName} TEXT UNIQUE NOT NULL, ");        // ディレクトリ名
+                    sb.Append($"{DirDBInfo.C_DocID} TEXT, ");                          // ディレクトリに紐づく文書のID (複数はカンマ区切りで表現)
+                    sb.Append($"{DirDBInfo.C_ChildDirID} TEXT);");                     // ディレクトリに紐づくディレクトリのID (複数はカンマ区切りで表現)
+
+                    command.CommandText = sb.ToString();
+                    command.ExecuteNonQuery();
+
+                    // document Table 作成
+                    sb.Clear();
                     sb.Append($"CREATE TABLE IF NOT EXISTS {DocDBInfo.C_DocumentTable} (");
                     sb.Append($"{DocDBInfo.C_DocID} INTEGER NOT NULL PRIMARY KEY, ");  // 文書のID、本 Table の主キー
                     sb.Append($"{DocDBInfo.C_DocName} TEXT UNIQUE NOT NULL, ");        // 文書名
-                    sb.Append($"{DocDBInfo.C_ChaptersID} INTEGER NOT NULL);");         // この文書に紐づく章のID（chapter Table の主キーじゃないので注意！）
+                    sb.Append($"{DocDBInfo.C_ChaptersID} INTEGER);");                  // この文書に紐づく章のID（chapter Table の主キーじゃないので注意！）
 
                     command.CommandText = sb.ToString();
                     command.ExecuteNonQuery();
@@ -186,8 +220,7 @@ namespace DocumentManager
                     try { command.ExecuteNonQuery(); }
                     catch (SQLiteException se) { MessageBox.Show(se.Message); }
 
-                    doc.SetDocID(newDocID);
-                    doc.SetChaptersID(newChaptersID);
+                    doc.SetDBInfo(newDocID, newChaptersID);
 
                     #region (ローカル関数) 連番になるよう、次のID値を取得
                     int getNextID(string table, string column)
@@ -205,5 +238,54 @@ namespace DocumentManager
             }
         }
         #endregion
+
+        public List<DataSource.Directory> GetDirectoryList()
+        {
+            var dirList = new List<DataSource.Directory>();
+            using (var db = new SQLiteConnection(mDocumentDB))
+            {
+                db.Open();
+                using (var command = db.CreateCommand())
+                {
+                    command.CommandText = $"select * from {DirDBInfo.C_DirTable}";
+                    using (var sdr = command.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            if (int.TryParse(sdr[DirDBInfo.C_DirID].ToString(), out var id) == false) continue;
+                            var dirObj = new DataSource.Directory(sdr[DirDBInfo.C_DirName].ToString());
+                            dirObj.SetInitDBInfo(id, sdr[DirDBInfo.C_DocID].ToString(), sdr[DirDBInfo.C_ChildDirID].ToString());
+                            dirList.Add(dirObj);
+                        }
+                    }
+                }
+            }
+            return dirList;
+        }
+
+        public List<Document> GetDocumentList(List<int> docIdList)
+        {
+            var docList = new List<Document>();
+            var inList = string.Join(",", docIdList.Select(x => $"'{x}'"));
+            using (var db = new SQLiteConnection(mDocumentDB))
+            {
+                db.Open();
+                using (var command = db.CreateCommand())
+                {
+                    command.CommandText = $"select * from {DocDBInfo.C_DocumentTable} where {DocDBInfo.C_DocID} in({inList})";
+                    using (var sdr = command.ExecuteReader())
+                    {
+                        while (sdr.Read())
+                        {
+                            if (int.TryParse(sdr[DocDBInfo.C_DocID].ToString(), out var id) == false) continue;
+                            var docObj = new Document(sdr[DocDBInfo.C_DocName].ToString());
+                            if (int.TryParse(sdr[DocDBInfo.C_ChaptersID].ToString(), out var cId)) docObj.SetDBInfo(id, cId);
+                            docList.Add(docObj);
+                        }
+                    }
+                }
+            }
+            return docList;
+        }
     }
 }

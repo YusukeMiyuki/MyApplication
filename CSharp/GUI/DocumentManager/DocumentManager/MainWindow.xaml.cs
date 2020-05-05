@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using DocumentManager.DataSource;
 using DocumentManager.OtherWindows;
 
@@ -9,11 +10,13 @@ namespace DocumentManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region プライベートメンバ
+        #region パブリックメンバ
         /// <summary>
         /// データベースの操作用メンバ
         /// </summary>
-        DocumentDB mDocDB;
+        static public DocumentDB DocDB { get; private set; }
+
+        static public DocOperateWindow DocWindow { get; private set; }
         #endregion
 
         #region コンストラクタ
@@ -21,35 +24,14 @@ namespace DocumentManager
         {
             InitializeComponent();
 
-            mDocDB = new DocumentDB();
+            DocDB = new DocumentDB();
+
+            DocWindow = new DocOperateWindow();
+            DocWindow.Show();
         }
         #endregion
 
         #region イベント
-
-        #region メニュー → 新規作成クリック
-        /// <summary>
-        /// 新規ドキュメントの作成を行う。
-        /// </summary>
-        void menuNewCreate_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var newCreateDoc = new DocCreateWindow();
-                newCreateDoc.ShowDialog();
-                if (newCreateDoc.DialogResult.Value)
-                {
-                    var doc = new Document(newCreateDoc.NewDocName);
-                    mDocDB.AddNewDocument(doc);
-                }
-            }
-#if !DEBUG
-            catch { }
-#endif
-            finally { }
-        }
-        #endregion
-
         #endregion
     }
 }

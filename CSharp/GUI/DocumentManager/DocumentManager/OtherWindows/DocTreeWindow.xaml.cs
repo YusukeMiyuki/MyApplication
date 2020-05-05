@@ -33,5 +33,10 @@ namespace DocumentManager.OtherWindows
             //DisplayChapters.Add(SelectedDocument);
             //DocTreeView.ItemsSource = DisplayChapters;
         }
+
+        private void addChapter_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

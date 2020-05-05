@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WpfCustomControls.MyTextBox
 {
@@ -62,6 +64,9 @@ namespace WpfCustomControls.MyTextBox
         /// ファイルやフォルダの禁止文字群
         /// </summary>
         char[] mNGFileFolder = new char[] { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
+
+        Thickness mZeroThickness = new Thickness(0);
+        Thickness mOneThickness = new Thickness(1);
         #endregion
 
         #region パブリックメンバ
@@ -82,6 +87,7 @@ namespace WpfCustomControls.MyTextBox
         public TextBoxEx()
         {
             InputTextKind = TextKind.None;
+            this.BorderThickness = mZeroThickness;
         }
         #endregion
 
@@ -176,5 +182,9 @@ namespace WpfCustomControls.MyTextBox
             }
         }
         #endregion
+
+        public void ToThickZero() => this.BorderThickness = mZeroThickness;
+        public void ToThickOne() => this.BorderThickness = mOneThickness;
+
     }
 }

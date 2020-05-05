@@ -4,18 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentManager.OtherWindows"
+        xmlns:myDtSrc="clr-namespace:DocumentManager.DataSource"
         mc:Ignorable="d"
         Title="DocTreeWindow" Height="450" Width="200">
     <DockPanel>
         <Menu x:Name="MainMenu" DockPanel.Dock="Top">
-            <MenuItem Header="章追加">
-
-            </MenuItem>
+            <MenuItem x:Name="addChapter" Header="章追加" Click="addChapter_Click"/>
         </Menu>
         <TreeView x:Name="DocTreeView" Width="200" HorizontalAlignment="Left">
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="local:Chapter" ItemsSource="{Binding Path=Chapters}">
-                    <TextBlock Text="{Binding Path=HeadLine}"/>
+                <HierarchicalDataTemplate DataType="myDtSrc:Chapter" ItemsSource="{Binding Path=Chapters}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=ChapterNumber}"/>
+                        <TextBlock Text="{Binding Path=HeadLine}"/>
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
