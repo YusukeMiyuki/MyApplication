@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using Word = Microsoft.Office.Interop.Word;
-using Excel = Microsoft.Office.Interop.Excel;
-using Microsoft.Office.Tools.Ribbon;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Drawing.Printing;
-using Microsoft.Office.Interop.Word;
 using System.Windows.Forms;
+using Microsoft.Office.Tools.Ribbon;
+using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace OutDocChapter
 {
@@ -40,8 +39,8 @@ namespace OutDocChapter
                     var range = para.Range;
                     var chapterNum = range.ListFormat.ListString;
                     var chapterTitle = range.Text.Replace(Environment.NewLine, "");
-                    var page = range.Information[Word.WdInformation.wdActiveEndPageNumber] as string;
-                    var info = (cNum: chapterNum, cTitle: chapterTitle, cPage: page ?? string.Empty);
+                    var page = range.Information[Word.WdInformation.wdActiveEndPageNumber] as object;
+                    var info = (cNum: chapterNum, cTitle: chapterTitle, cPage: page?.ToString() ?? string.Empty);
                     tplInfoList.Add(info);
                 }
             }
@@ -53,55 +52,83 @@ namespace OutDocChapter
             #endregion
 
             #region Excel出力
-            var excelApp = new Excel.Application
+            var excelApp = new Excel.Application()
             {
                 Visible = false
             };
             try
             {
-                Excel.Workbook wb = excelApp.Workbooks.Add();
+                var thisAddinUriPath = Assembly.GetExecutingAssembly().CodeBase; // Assembly.GetExecutingAssemblyを何かの関数内で使用すると、このアドインのパスが取得できない。
+                var uriPath = new UriBuilder(thisAddinUriPath);  // 取得されるパスは形式がUriなので、Pathで扱えるよう変換していく
+                var path = Uri.UnescapeDataString(uriPath.Path);
+                var thisAddinPath = Path.GetDirectoryName(Path.GetFullPath(path));
+                var templatePath = Path.Combine(thisAddinPath, "Template", "OutChapterTemplate.xltx");
+                Excel.Workbook wb = excelApp.Workbooks.Open(templatePath, ReadOnly: "False");
                 try
                 {
                     Excel.Worksheet sheet = wb.Sheets[1];
                     try
                     {
-                        // 行の「+」は日付、wordの文書名、空行、あとは念のため。
-                        // 列の「+」は最初の空列と出力の最初の列（Length = 0 が最大の可能性あり）、あと念のため
-                        var colMax = tplInfoList.Max(x => x.cNum.Length);
-                        var setValue = new object[tplInfoList.Count + 10, colMax + 10];
-                        setValue[0, 0] = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
-                        setValue[1, 0] = doc.FullName;
+                        setCellValue(sheet, 1, 1, DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss"));
+                        setCellValue(sheet, 2, 1, Path.GetFileName(doc.FullName));
+
+                        // 章の数を最大列数として確保する。 「+1」は0になるのを防ぐため。
+                        var colMax = tplInfoList.Max(x => x.cNum.Count(c => c == '.')) + 1;
+                        // 行の「+」は念のため。
+                        // 列の「+」も念のため。
+                        var setValue = new object[tplInfoList.Count + 10, colMax * 2 + 10]; // 「*2」は章タイトルの行
 
                         for (int row = 0; row < tplInfoList.Count; row++)
                         {
                             var tplInfo = tplInfoList[row];
-                            for (int col = 0; col < colMax; col++)
-                            {
-                                var colIndent = tplInfo.cNum.Count(c => c == '.');
-                                var value = $"{tplInfo.cNum} {tplInfo.cTitle} (P.{tplInfo.cPage})";
-                                setValue[row + 4, col + 2 + colIndent] = value;
-                            }
+                            setValue[row, 0] = tplInfo.cPage;
+
+                            var colIndent = tplInfo.cNum.Count(c => c == '.');
+                            setValue[row, 1 + colIndent] = tplInfo.cNum.Last().ToString();
+                            setValue[row, 1 + colMax + colIndent] = tplInfo.cTitle;
                         }
 
-                        // Excelの貼り付け開始位置（Indentが1始まりなので注意）
-                        var pasteRow = 1;
-                        var pasteCol = 1;
-                        var startCell = (Excel.Range)sheet.Cells[pasteRow, pasteCol];
-                        try
+                        #region 列、及び行の挿入
+                        if (colMax >= 2)
                         {
-                            var endCell = (Excel.Range)sheet.Cells[pasteRow + tplInfoList.Count + 4, pasteCol + colMax + 3];
+                            // 列の挿入
+                            // 必ず章タイトル列から追加する。章番号から追加すると、章タイトル側の列追加位置がわかりにくくなるため。
+                            // 1列追加 = 5 + 0 としなければならない。Excelは1行選んで挿入すれば1行追加されるため。また、テンプレートにはすでに1行分確保されていることに注意
+                            var addChapterTitleCol = getRange(sheet, 1, 5, sheet.Rows.Count, 5 + colMax - 2);
                             try
                             {
-                                var targetRange = sheet.Range[startCell, endCell];
-                                try
-                                {
-                                    targetRange.Value = setValue;
-                                }
-                                finally { Marshal.ReleaseComObject(targetRange); }
+                                addChapterTitleCol.Select();
+                                addChapterTitleCol.Insert(Excel.XlInsertShiftDirection.xlShiftDown, Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                             }
-                            finally { Marshal.ReleaseComObject(endCell); }
+                            finally { Marshal.ReleaseComObject(addChapterTitleCol); }
+                            var addChpaterNumCol = getRange(sheet, 1, 4, sheet.Rows.Count, 4 + colMax - 2);
+                            try
+                            {
+                                addChpaterNumCol.Select();
+                                addChpaterNumCol.Insert(Excel.XlInsertShiftDirection.xlShiftDown, Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+                            }
+                            finally { Marshal.ReleaseComObject(addChpaterNumCol); }
                         }
-                        finally { Marshal.ReleaseComObject(startCell); }
+
+                        // 行の挿入
+                        var addRow = getRange(sheet, 6, 1, 6 + tplInfoList.Count - 2, sheet.Columns.Count);
+                        try
+                        {
+                            addRow.Select();
+                            addRow.Insert(Excel.XlInsertShiftDirection.xlShiftDown, Excel.XlInsertFormatOrigin.xlFormatFromRightOrBelow);
+                        }
+                        finally { Marshal.ReleaseComObject(addRow); }
+                        #endregion
+
+                        #region Excelに貼り付け
+                        // Excelの貼り付け開始位置（Indentが1始まりなので注意）
+                        var target = getRange(sheet, 6, 2, 6 + setValue.GetLength(0) - 1, 2 + setValue.GetLength(1) - 1);
+                        try
+                        {
+                            target.Value = setValue;
+                        }
+                        finally { Marshal.ReleaseComObject(target); }
+                        #endregion
                     }
                     finally { Marshal.ReleaseComObject(sheet); }
                 }
@@ -113,6 +140,35 @@ namespace OutDocChapter
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
                 excelApp.Visible = true;
+            }
+            #endregion
+
+            #region (ローカル関数) 指定セルに値代入
+            void setCellValue(Excel.Worksheet sht, int row, int col, string value)
+            {
+                var targetRange = (Excel.Range)sht.Cells[row, col];
+                try
+                {
+                    targetRange.Value = value;
+                }
+                finally { Marshal.ReleaseComObject(targetRange); }
+            }
+            #endregion
+
+            #region (ローカル関数) 指定範囲のRengeオブジェクト取得
+            Excel.Range getRange(Excel.Worksheet sht, int row1, int col1, int row2, int col2)
+            {
+                var startCell = (Excel.Range)sht.Cells[row1, col1];
+                try
+                {
+                    var endCell = (Excel.Range)sht.Cells[row2, col2];
+                    try
+                    {
+                        return sht.Range[startCell, endCell];
+                    }
+                    finally { Marshal.ReleaseComObject(endCell); }
+                }
+                finally { Marshal.ReleaseComObject(startCell); }
             }
             #endregion
         }
