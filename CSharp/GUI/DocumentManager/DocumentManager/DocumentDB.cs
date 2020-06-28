@@ -34,6 +34,7 @@ namespace DocumentManager
             #region カラム名
             public const string C_DirID = "DirID";
             public const string C_DirName = "DirName";
+            public const string C_IsTopDir = "IsTopDir";
             public const string C_DocID = "DocID";
             public const string C_ChildDirID = "ChildDirID";
             #endregion
@@ -151,6 +152,7 @@ namespace DocumentManager
                     sb.Append($"CREATE TABLE IF NOT EXISTS {DirDBInfo.C_DirTable} (");
                     sb.Append($"{DirDBInfo.C_DirID} INTEGER NOT NULL PRIMARY KEY, ");  // ディレクトリのID、本 Table の主キー
                     sb.Append($"{DirDBInfo.C_DirName} TEXT UNIQUE NOT NULL, ");        // ディレクトリ名
+                    sb.Append($"{DirDBInfo.C_IsTopDir} INTEGER NOT NULL, ");           // 階層構造上でトップのディレクトリか。(1:トップ、0:そうじゃない)
                     sb.Append($"{DirDBInfo.C_DocID} TEXT, ");                          // ディレクトリに紐づく文書のID (複数はカンマ区切りで表現)
                     sb.Append($"{DirDBInfo.C_ChildDirID} TEXT);");                     // ディレクトリに紐づくディレクトリのID (複数はカンマ区切りで表現)
 
@@ -162,7 +164,7 @@ namespace DocumentManager
                     sb.Append($"CREATE TABLE IF NOT EXISTS {DocDBInfo.C_DocumentTable} (");
                     sb.Append($"{DocDBInfo.C_DocID} INTEGER NOT NULL PRIMARY KEY, ");  // 文書のID、本 Table の主キー
                     sb.Append($"{DocDBInfo.C_DocName} TEXT UNIQUE NOT NULL, ");        // 文書名
-                    sb.Append($"{DocDBInfo.C_ChaptersID} INTEGER);");                  // この文書に紐づく章のID（chapter Table の主キーじゃないので注意！）
+                    sb.Append($"{DocDBInfo.C_ChaptersID} INTEGER NOT NULL);");         // この文書に紐づく章のID（chapter Table の主キーじゃないので注意！）
 
                     command.CommandText = sb.ToString();
                     command.ExecuteNonQuery();
@@ -199,6 +201,22 @@ namespace DocumentManager
         }
         #endregion
 
+        #region 連番になるよう、次のID値を取得
+        int getNextID(SQLiteConnection db, string table, string column)
+        {
+            using (var command = db.CreateCommand())
+            {
+                command.CommandText = $"select max({column}) from {table}";
+                using (var sdr = command.ExecuteReader())
+                {
+                    // max関数を使ったsqlなので一つしか返ってこない. 新しくドキュメントを追加するので、++する
+                    // maxが複数ヒットする場合、最初の一つしか返さない（SQLite独特らしい）
+                    return (sdr.Read() && int.TryParse(sdr[$"max({column})"].ToString(), out var maxId)) ? ++maxId : 0;
+                }
+            }
+        }
+        #endregion
+
         #region 新しいドキュメントをテーブルに追加する
         /// <summary>
         /// 新しいドキュメントをテーブルに追加する
@@ -211,29 +229,15 @@ namespace DocumentManager
                 db.Open();
                 using (var command = db.CreateCommand())
                 {
-                    int newDocID = getNextID(DocDBInfo.C_DocumentTable, DocDBInfo.C_DocID);
+                    int newDocID = getNextID(db, DocDBInfo.C_DocumentTable, DocDBInfo.C_DocID);
 
-                    // ChapterDBInfo.C_ChaptersIDは複数ヒットするが、SQLiteのmax関数は最初にヒットしたものしか返さない、よって一つしか返ってこない
-                    int newChaptersID = getNextID(ChapterDBInfo.C_ChaptersID, ChapterDBInfo.C_ChapterTable);
+                    int newChaptersID = getNextID(db, DocDBInfo.C_DocumentTable, DocDBInfo.C_ChaptersID);
 
                     command.CommandText = $"insert into {DocDBInfo.C_DocumentTable} ({DocDBInfo.C_DocID}, {DocDBInfo.C_DocName}, {DocDBInfo.C_ChaptersID}) values ({newDocID}, '{doc.DocName}', {newChaptersID});";
                     try { command.ExecuteNonQuery(); }
                     catch (SQLiteException se) { MessageBox.Show(se.Message); }
 
                     doc.SetDBInfo(newDocID, newChaptersID);
-
-                    #region (ローカル関数) 連番になるよう、次のID値を取得
-                    int getNextID(string table, string column)
-                    {
-                        command.CommandText = $"select max({column}) from {table}";
-                        using (var sdr = command.ExecuteReader())
-                        {
-                            // max関数を使ったsqlなので一つしか返ってこない. 新しくドキュメントを追加するので、++する
-                            // maxが複数ヒットする場合、最初の一つしか返さない（SQLite独特らしい）
-                            return (sdr.Read() && int.TryParse(sdr[$"max({column})"].ToString(), out var maxId)) ? ++maxId : 0;
-                        }
-                    }
-                    #endregion
                 }
             }
         }
@@ -254,7 +258,12 @@ namespace DocumentManager
                         {
                             if (int.TryParse(sdr[DirDBInfo.C_DirID].ToString(), out var id) == false) continue;
                             var dirObj = new DataSource.Directory(sdr[DirDBInfo.C_DirName].ToString());
-                            dirObj.SetInitDBInfo(id, sdr[DirDBInfo.C_DocID].ToString(), sdr[DirDBInfo.C_ChildDirID].ToString());
+                            if (int.TryParse(sdr[DirDBInfo.C_IsTopDir].ToString(), out var isTopDir) == false)
+                            {
+                                // エラー
+                                continue;
+                            }
+                            dirObj.SetInitDBInfo(id, isTopDir, sdr[DirDBInfo.C_DocID].ToString(), sdr[DirDBInfo.C_ChildDirID].ToString());
                             dirList.Add(dirObj);
                         }
                     }
@@ -286,6 +295,15 @@ namespace DocumentManager
                 }
             }
             return docList;
+        }
+
+        public int GetNextChaptersId()
+        {
+            using (var db = new SQLiteConnection(mDocumentDB))
+            {
+                db.Open();
+                return getNextID(db, DocDBInfo.C_DocumentTable, DocDBInfo.C_ChaptersID);
+            }
         }
     }
 }

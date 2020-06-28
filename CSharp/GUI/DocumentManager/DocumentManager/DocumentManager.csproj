@@ -85,6 +85,9 @@
     <Compile Include="OtherWindows\DocTreeWindow.xaml.cs">
       <DependentUpon>DocTreeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\DocOperate.xaml.cs">
+      <DependentUpon>DocOperate.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="OtherWindows\DocTreeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\DocOperate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -148,7 +155,10 @@
     <Folder Include="log\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Plus.ico" />
+    <None Include="Resources\directory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UserControls\directory.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

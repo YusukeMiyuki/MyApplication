@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="DocumentManager.UserControls.DocOperate"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:myTxtBox="clr-namespace:WpfCustomControls.MyTextBox;assembly=WpfCustomControls"
+             xmlns:myDtSrc="clr-namespace:DocumentManager.DataSource"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="400">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" BorderThickness="1">
+            <MenuItem x:Name="miNewDir" Header="newDir" Click="miNewDir_Click"/>
+            <MenuItem x:Name="miNewDoc" Header="newdoc" Click="miNewDoc_Click"/>
+            <MenuItem x:Name="miOpen" Header="open"/>
+        </Menu>
+        <TreeView x:Name="tvDirDoc" MouseLeftButtonDown="tvDirDoc_MouseLeftButtonDown">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate x:Name="dieData" DataType="{x:Type myDtSrc:Directory}" ItemsSource="{Binding Path=Items}">
+                    <StackPanel Orientation="Horizontal" Background="White">
+                        <Image Source="directory.png" Margin="0,0,4,0" Height="10" Focusable="False"/>
+                        <myTxtBox:TextBoxEx x:Name="txtExDir" Text="{Binding Path=DirName}"  AllowDrop="False" Loaded="txtEx_Loaded" GotFocus="txtEx_GotFocus" LostFocus="txtExDir_LostFocus" MouseDoubleClick="txtEx_MouseDoubleClick" KeyDown="txtEx_KeyDown"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type myDtSrc:Document}">
+                    <myTxtBox:TextBoxEx x:Name="txtExDoc" Text="{Binding Path=DocName}" AllowDrop="False" Loaded="txtEx_Loaded" GotFocus="txtEx_GotFocus" LostFocus="txtExDoc_LostFocus" MouseDoubleClick="txtEx_MouseDoubleClick" KeyDown="txtEx_KeyDown"/>
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </DockPanel>
+</UserControl>

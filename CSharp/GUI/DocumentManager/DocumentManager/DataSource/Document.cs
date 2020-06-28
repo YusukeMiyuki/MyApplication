@@ -37,7 +37,7 @@ namespace DocumentManager.DataSource
         /// </summary>
         public IReadOnlyList<Chapter> Chapters => mChapters;
 
-        public bool IsChangeDirName => DocName != mInitDocName;
+        public bool IsChangeDocName => DocName != mInitDocName;
         #endregion
 
         #region コンストラクタ

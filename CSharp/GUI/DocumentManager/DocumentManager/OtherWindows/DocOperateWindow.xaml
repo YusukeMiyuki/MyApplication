@@ -16,6 +16,10 @@
         </Menu>
         <TreeView x:Name="tvDirDoc">
             <TreeView.Resources>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected.Value, Mode=TwoWay}"/>
+                </Style>
+                
                 <HierarchicalDataTemplate x:Name="dieData" DataType="{x:Type myDtSrc:Directory}" ItemsSource="{Binding Path=Items}">
                     <myTxtBox:TextBoxEx x:Name="txtExDir" Text="{Binding Path=DirName}" AllowDrop="False" Loaded="txtEx_Loaded" GotFocus="txtEx_GotFocus" LostFocus="txtExDir_LostFocus" MouseDoubleClick="txtEx_MouseDoubleClick"/>
                 </HierarchicalDataTemplate>

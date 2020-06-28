@@ -6,7 +6,6 @@
     "\\CSharp\\ClassLib\\GUI",
     "\\CSharp\\ClassLib\\GUI\\Framework",
     "\\CSharp\\ClassLib\\GUI\\Framework\\WpfCustomControlLibrary",
-    "\\CSharp\\GUI",
     "\\CSharp\\GUI\\DocumentManager",
     "\\CSharp\\GUI\\DocumentManager\\DocumentManager",
     "\\CSharp\\OfficeAddin",
@@ -14,6 +13,6 @@
     "\\CSharp\\OfficeAddin\\Word\\OutDocChapter",
     "\\CSharp\\OfficeAddin\\Word\\OutDocChapter\\OutDocChapter"
   ],
-  "SelectedNode": "\\CSharp\\GUI\\DocumentManager\\DocumentManager.sln",
+  "SelectedNode": "\\CSharp\\GUI",
   "PreviewInSolutionExplorer": false
 }

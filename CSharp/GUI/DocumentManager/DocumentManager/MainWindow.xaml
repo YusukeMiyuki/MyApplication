@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DocumentManager"
-        xmlns:myWindows="clr-namespace:DocumentManager.OtherWindows"
+        xmlns:ucDocOpe="clr-namespace:DocumentManager.UserControls"
         mc:Ignorable="d"
         Title="DocumentManager" Height="450" Width="800">
     <DockPanel x:Name="dpMain">
@@ -19,5 +19,6 @@
 
             </MenuItem>
         </Menu>
+        <ucDocOpe:DocOperate x:Name="docOperate" DockPanel.Dock="Left"/>
     </DockPanel>
 </Window>
