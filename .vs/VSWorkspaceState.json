@@ -2,17 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\CSharp",
-    "\\CSharp\\ClassLib",
-    "\\CSharp\\ClassLib\\GUI",
-    "\\CSharp\\ClassLib\\GUI\\Framework",
-    "\\CSharp\\ClassLib\\GUI\\Framework\\WpfCustomControlLibrary",
+    "\\CSharp\\GUI",
     "\\CSharp\\GUI\\DocumentManager",
-    "\\CSharp\\GUI\\DocumentManager\\DocumentManager",
-    "\\CSharp\\OfficeAddin",
-    "\\CSharp\\OfficeAddin\\Word",
-    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter",
-    "\\CSharp\\OfficeAddin\\Word\\OutDocChapter\\OutDocChapter"
+    "\\CSharp\\GUI\\OrthogonalTable"
   ],
-  "SelectedNode": "\\CSharp\\GUI",
+  "SelectedNode": "\\CSharp\\GUI\\OrthogonalTable\\OrthogonalTable.sln",
   "PreviewInSolutionExplorer": false
 }
