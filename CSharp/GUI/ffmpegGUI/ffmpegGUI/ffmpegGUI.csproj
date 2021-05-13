@@ -112,5 +112,8 @@
     <Folder Include="MVVM\Model\" />
     <Folder Include="Themes\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ffmpegGUI_Spec.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
