@@ -1,7 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\CSharp",
+    "\\CSharp\\GUI",
+    "\\CSharp\\GUI\\DocumentManager",
+    "\\CSharp\\GUI\\OrthogonalTable"
   ],
-  "SelectedNode": "\\ToDoTaskManager.sln",
+  "SelectedNode": "\\CSharp\\GUI\\OrthogonalTable\\OrthogonalTable.sln",
   "PreviewInSolutionExplorer": false
 }

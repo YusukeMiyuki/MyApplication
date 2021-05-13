@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,16 +11,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DocumentManager.DataSource;
 using WpfCustomControls.MyTextBox;
 
-namespace DocumentManager.OtherWindows
+namespace DocumentManager.UserControls
 {
     /// <summary>
-    /// DocOperateWindow.xaml の相互作用ロジック
+    /// DocOperate.xaml の相互作用ロジック
     /// </summary>
-    public partial class DocOperateWindow : Window
+    public partial class DocOperate : UserControl
     {
         #region プライベートメンバ
         SortedDictionary<int, Document> mDocDic { get; } = new SortedDictionary<int, Document>();
@@ -39,45 +38,16 @@ namespace DocumentManager.OtherWindows
         public string NewDocName { get; private set; }
         #endregion
 
-        public DocOperateWindow()
+        public DocOperate()
         {
             InitializeComponent();
+        }
 
+        public void Init()
+        {
             Directories = new ObservableCollection<Directory>();
             tvDirDoc.ItemsSource = Directories;
 
-            init();
-
-            // デバッグ用
-            var dir0 = new Directory("f0");
-            dir0.SetInitDBInfo(0, 1, "0", "1,2");
-            mAllDirDic.Add(0, dir0);
-
-            var dir1 = new Directory("f1");
-            dir1.SetInitDBInfo(1, 0, "1,2", "");
-            mAllDirDic.Add(1, dir1);
-
-            var dir2 = new Directory("f2");
-            dir2.SetInitDBInfo(2, 0, "", "");
-            mAllDirDic.Add(2, dir2);
-
-            var doc0 = new Document("d0");
-            doc0.SetDBInfo(0, 0);
-            mDocDic.Add(0, doc0);
-
-            var doc1 = new Document("d1");
-            doc1.SetDBInfo(1, 1);
-            mDocDic.Add(1, doc1);
-
-            var doc2 = new Document("d2");
-            doc2.SetDBInfo(2, 2);
-            mDocDic.Add(2, doc2);
-
-            Directories.Add(dir0);
-        }
-
-        void init()
-        {
             // Directoryの取得
             foreach (var dir in MainWindow.DocDB.GetDirectoryList())
             {
@@ -91,6 +61,33 @@ namespace DocumentManager.OtherWindows
             {
                 if (mDocDic.ContainsKey(doc.DocID) == false) mDocDic.Add(doc.DocID, doc);
             }
+
+            // デバッグ用
+            //var dir0 = new Directory("f0");
+            //dir0.SetInitDBInfo(0, 1, "0", "1,2");
+            //mAllDirDic.Add(0, dir0);
+
+            //var dir1 = new Directory("f1");
+            //dir1.SetInitDBInfo(1, 0, "1,2", "");
+            //mAllDirDic.Add(1, dir1);
+
+            //var dir2 = new Directory("f2");
+            //dir2.SetInitDBInfo(2, 0, "", "");
+            //mAllDirDic.Add(2, dir2);
+
+            //var doc0 = new Document("d0");
+            //doc0.SetDBInfo(0, 0);
+            //mDocDic.Add(0, doc0);
+
+            //var doc1 = new Document("d1");
+            //doc1.SetDBInfo(1, 1);
+            //mDocDic.Add(1, doc1);
+
+            //var doc2 = new Document("d2");
+            //doc2.SetDBInfo(2, 2);
+            //mDocDic.Add(2, doc2);
+
+            //Directories.Add(dir0);
         }
 
         #region イベント
@@ -150,13 +147,20 @@ namespace DocumentManager.OtherWindows
             if (mSelectedItem != null && !(mSelectedItem is Directory)) return;
 
             var nextId = mAllDirDic.Any() ? mAllDirDic.Keys.Last() + 1 : 0;
-            var dir = new Directory($"f{nextId}");
-            dir.SetInitDBInfo(nextId, 0, "", "");
+            var dir = new Directory($"");
             mAllDirDic.Add(nextId, dir);
 
-            if (mSelectedItem != null) (mSelectedItem as Directory).UpdateChildDirIdList(new List<int> { nextId });
-            else Directories.Add(dir);
-            
+            if (mSelectedItem != null)
+            {
+                (mSelectedItem as Directory).UpdateChildDirIdList(new List<int> { nextId });
+                dir.SetInitDBInfo(nextId, 0, "", "");
+            }
+            else
+            {
+                Directories.Add(dir);
+                dir.SetInitDBInfo(nextId, 1, "", "");
+            }
+
             mSelectedItem = dir;
         }
 
@@ -179,8 +183,17 @@ namespace DocumentManager.OtherWindows
             var txtEx = sender as TextBoxEx;
             if (string.IsNullOrEmpty(txtEx.Text))
             {
+                // 何かディレクトリ名があったのを空白にした場合
+                if ((mSelectedItem as Directory).IsChangeDirName)
+                {
+                    MessageBox.Show("ディレクトリ名を空文字にはできません。");
+                    txtEx.Focus();
+                    return;
+                }
+
                 var del = txtEx.DataContext as Directory;
                 Directories.Remove(del);
+                mAllDirDic.Remove(del.DirID);
                 return;
             }
             txtEx.ToThickZero();
@@ -205,6 +218,8 @@ namespace DocumentManager.OtherWindows
             var txtEx = sender as TextBoxEx;
             txtEx.IsReadOnly = false;
             txtEx.Background = Brushes.White;
+            if (txtEx.DataContext is Directory dir) mSelectedItem = dir;
+            else mSelectedItem = txtEx.DataContext as Document;
         }
 
         void txtEx_GotFocus(object sender, RoutedEventArgs e)
@@ -227,6 +242,21 @@ namespace DocumentManager.OtherWindows
                 txtEx.Focus();
             }
             txtEx.GotFocus += txtEx_GotFocus;
+        }
+
+        private void txtEx_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                tvDirDoc.Focus(); // フォーカスを外したい
+                mSelectedItem = null;
+            }
+        }
+
+        private void tvDirDoc_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            tvDirDoc.Focus();
+            mSelectedItem = null;
         }
     }
 }

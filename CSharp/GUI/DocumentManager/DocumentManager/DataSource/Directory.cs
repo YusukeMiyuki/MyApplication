@@ -20,6 +20,7 @@ namespace DocumentManager.DataSource
     {
         #region DB情報
         public int DirID { get; private set; }
+        public int IsTopDir { get; private set; }
         public string DocID { get; private set; }
         public string ChildDirID { get; private set; }
         #endregion
@@ -33,7 +34,7 @@ namespace DocumentManager.DataSource
         #region パブリックメンバ
         public event PropertyChangedEventHandler PropertyChanged;
         public string DirName { get; set; }
-
+        public bool IsTop => IsTopDir == 1;
         public IReadOnlyList<int> DocIdList => mDocIDList;
         public IReadOnlyList<Document> DocList => MainWindow.DocWindow.GetDocumentList(mDocIDList);
         public IReadOnlyList<int> ChildDirIdList => mChildDirIdList;
@@ -67,9 +68,10 @@ namespace DocumentManager.DataSource
             mChildDirIdList = new List<int>();
         }
 
-        public void SetInitDBInfo(int dirID, string docId, string childDirId)
+        public void SetInitDBInfo(int dirID, int isTopDir, string docId, string childDirId)
         {
             DirID = dirID;
+            IsTopDir = isTopDir;
             DocID = docId;
             mDocIDList = string.IsNullOrEmpty(docId) ? new List<int>() : docId.Split(',').Select(x => int.Parse(x)).ToList();
             ChildDirID = childDirId;
@@ -78,13 +80,13 @@ namespace DocumentManager.DataSource
 
         public void UpdateChildDirIdList(List<int> idList)
         {
-            mChildDirIdList.AddRange(idList);
+            mChildDirIdList.AddRange(idList.Where(x => mChildDirIdList.Contains(x) == false));
             OnPropertyChanged(nameof(Items));
         }
 
-        public void UpdatDocIdList(List<int> idList)
+        public void UpdateDocIdList(List<int> idList)
         {
-            mDocIDList.AddRange(idList);
+            mDocIDList.AddRange(idList.Where(x => mDocIDList.Contains(x) == false));
             OnPropertyChanged(nameof(Items));
         }
 

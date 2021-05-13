@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using DocumentManager.DataSource;
 using DocumentManager.OtherWindows;
+using DocumentManager.UserControls;
 
 namespace DocumentManager
 {
@@ -16,7 +17,7 @@ namespace DocumentManager
         /// </summary>
         static public DocumentDB DocDB { get; private set; }
 
-        static public DocOperateWindow DocWindow { get; private set; }
+        static public DocOperate DocWindow { get; private set; }
         #endregion
 
         #region コンストラクタ
@@ -26,8 +27,10 @@ namespace DocumentManager
 
             DocDB = new DocumentDB();
 
-            DocWindow = new DocOperateWindow();
-            DocWindow.Show();
+            DocWindow = docOperate;
+            docOperate.Init();
+            //DocWindow = new DocOperateWindow();
+            //DocWindow.Show();
         }
         #endregion
 
