@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="ffmpegGUI.MVVM.View.SettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ffmpegGUI.MVVM.View"
+             xmlns:vm="clr-namespace:ffmpegGUI.MVVM.ViewModel"
+             xmlns:conv="clr-namespace:ffmpegGUI.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="350"
+             d:DesignWidth="200"
+             Background="Gray">
+    <UserControl.Resources>
+        <vm:AppSettingViewModel x:Key="appSetting" />
+        <conv:StringToDoubleConverter x:Key="stringToDouble" />
+    </UserControl.Resources>
+
+    <Grid DataContext="{StaticResource appSetting}">
+        <StackPanel>
+            <TextBox Text="{Binding StartTrimTime, Mode=TwoWay, Converter={StaticResource stringToDouble}}"
+                     Margin="12" />
+
+            <TextBox Text="{Binding EndTrimTime, Mode=TwoWay, Converter={StaticResource stringToDouble}}"
+                     Margin="12" />
+
+            <CheckBox Name="isCompress"
+                      Content="Compress"
+                      IsChecked="{Binding IsCompress, Mode=TwoWay}"
+                      Margin="12" />
+            <TextBox Margin="12"
+                     Text="{Binding CompressRate, Mode=TwoWay, Converter={StaticResource stringToDouble}}"
+                     IsEnabled="{Binding ElementName=isCompress, Path=IsChecked}" />
+
+            <CheckBox Name="isScale"
+                      Content="Scaling"
+                      IsChecked="{Binding IsScaling, Mode=TwoWay}"
+                      Margin="12" />
+            <TextBox Margin="12"
+                     Text="{Binding VerticalScale, Mode=TwoWay, Converter={StaticResource stringToDouble}}"
+                     IsEnabled="{Binding ElementName=isScale, Path=IsChecked}" />
+            <TextBox Margin="12"
+                     Text="{Binding HorizontalScale, Mode=TwoWay, Converter={StaticResource stringToDouble}}"
+                     IsEnabled="{Binding ElementName=isScale, Path=IsChecked}" />
+
+        </StackPanel>
+    </Grid>
+</UserControl>
