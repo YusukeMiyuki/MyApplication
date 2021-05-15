@@ -46,7 +46,7 @@ namespace ffmpegGUI
             var setting = new SettingView();
             var test = new Popup
             {
-                StaysOpen = false,
+                StaysOpen = true,
                 Child = setting
             };
 

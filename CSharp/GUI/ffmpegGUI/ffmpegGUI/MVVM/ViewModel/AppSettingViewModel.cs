@@ -88,7 +88,7 @@ namespace ffmpegGUI.MVVM.ViewModel
         /// setting save command
         /// </summary>
         [XmlIgnore]
-        public SettingCommand SaveCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; private set; }
         #endregion
 
         #region ctor
@@ -97,7 +97,7 @@ namespace ffmpegGUI.MVVM.ViewModel
         /// </summary>
         public AppSettingViewModel()
         {
-            SaveCommand = new SettingCommand((x) => { Save(); }, (x) => { return _isChanged; });
+            SaveCommand = new DelegateCommand(onSave, canExecuteSave);
         }
         #endregion
 
@@ -115,6 +115,8 @@ namespace ffmpegGUI.MVVM.ViewModel
             if (Equals(storage, value)) return false;
 
             storage = value;
+            _isChanged |= true;
+            SaveCommand.RaiseCanExecuteChanged();
             OnPropertyChanged(propertyName);
             return true;
         }
@@ -149,24 +151,30 @@ namespace ffmpegGUI.MVVM.ViewModel
         /// deserialize AppSetting
         /// </summary>
         /// <returns>AppSetting Object</returns>
-        public void Load(AppSettingViewModel app)
+        public void Load()
         {
+            if (File.Exists(@"C:\temp\test.xml") == false) return;
+
             var xmlSerializer = new XmlSerializer(typeof(AppSettingViewModel));
             AppSettingViewModel appSetting;
             using (var sr = new StreamReader(@"C:\temp\test.xml"))
             {
                 appSetting = xmlSerializer.Deserialize(sr) as AppSettingViewModel;
             }
-            SaveCommand = new SettingCommand((x) => { Save(); }, (x) => { return _isChanged; });
-
-            app.StartTrimTime = appSetting.StartTrimTime;
-            app.EndTrimTime = appSetting.EndTrimTime;
-            app.IsCompress = appSetting.IsCompress;
-            app.CompressRate = appSetting.CompressRate;
-            app.IsScaling = appSetting.IsScaling;
-            app.VerticalScale = appSetting.VerticalScale;
-            app.HorizontalScale = appSetting.HorizontalScale;
+            SaveCommand = new DelegateCommand(onSave, canExecuteSave);
+            StartTrimTime = appSetting.StartTrimTime;
+            EndTrimTime = appSetting.EndTrimTime;
+            IsCompress = appSetting.IsCompress;
+            CompressRate = appSetting.CompressRate;
+            IsScaling = appSetting.IsScaling;
+            VerticalScale = appSetting.VerticalScale;
+            HorizontalScale = appSetting.HorizontalScale;
+            _isChanged = false;
+            SaveCommand.RaiseCanExecuteChanged();
         }
         #endregion
+
+        void onSave(object param) => Save();
+        bool canExecuteSave(object param) => _isChanged;
     }
 }

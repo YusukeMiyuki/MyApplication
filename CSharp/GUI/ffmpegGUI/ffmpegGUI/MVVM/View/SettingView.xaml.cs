@@ -25,8 +25,7 @@ namespace ffmpegGUI.MVVM.View
         {
             InitializeComponent();
 
-            var app = (this.Resources["appSetting"] as AppSettingViewModel);
-            app.Load(app);
+            (this.Resources["appSetting"] as AppSettingViewModel).Load();
         }
     }
 }

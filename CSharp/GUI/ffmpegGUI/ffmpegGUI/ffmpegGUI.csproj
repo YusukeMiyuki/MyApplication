@@ -66,7 +66,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\SettingCommand.cs" />
+    <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="MVVM\ViewModel\AppSettingViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
