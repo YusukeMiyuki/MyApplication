@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ffmpegGUI.MVVM.ViewModel
 {
-    class OperateMovieView : INotifyPropertyChanged
+    class OperateMovieViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

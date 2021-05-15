@@ -77,9 +77,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\MenuButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MVVM\ViewModel\OperateMovieView.cs" />
+    <Compile Include="MVVM\ViewModel\OperateMovieViewModel.cs" />
     <Compile Include="MVVM\View\SettingView.xaml.cs">
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
@@ -110,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="MVVM\Model\" />
-    <Folder Include="Themes\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="ffmpegGUI_Spec.txt" />

@@ -116,7 +116,7 @@ namespace ffmpegGUI.MVVM.ViewModel
 
             storage = value;
             _isChanged |= true;
-            SaveCommand.RaiseCanExecuteChanged();
+            //SaveCommand.RaiseCanExecuteChanged();
             OnPropertyChanged(propertyName);
             return true;
         }
@@ -170,7 +170,7 @@ namespace ffmpegGUI.MVVM.ViewModel
             VerticalScale = appSetting.VerticalScale;
             HorizontalScale = appSetting.HorizontalScale;
             _isChanged = false;
-            SaveCommand.RaiseCanExecuteChanged();
+            //SaveCommand.RaiseCanExecuteChanged();
         }
         #endregion
 

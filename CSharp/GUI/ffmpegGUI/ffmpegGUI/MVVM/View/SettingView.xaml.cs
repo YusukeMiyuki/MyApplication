@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ffmpegGUI.Commands;
 using ffmpegGUI.MVVM.ViewModel;
 
 namespace ffmpegGUI.MVVM.View
@@ -21,11 +22,13 @@ namespace ffmpegGUI.MVVM.View
     /// </summary>
     public partial class SettingView : UserControl
     {
+        AppSettingViewModel _app => (this.Resources["appSetting"] as AppSettingViewModel);
+
         public SettingView()
         {
             InitializeComponent();
 
-            (this.Resources["appSetting"] as AppSettingViewModel).Load();
+            _app.Load();
         }
     }
 }

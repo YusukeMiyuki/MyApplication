@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ffmpegGUI.Commands
@@ -9,13 +10,17 @@ namespace ffmpegGUI.Commands
     public class DelegateCommand : ICommand
     {
         #region private member
-        Action<object> _execute;
-        Func<object, bool> _canExecute;
+        readonly Action<object> _execute;
+        readonly Func<object, bool> _canExecute;
         #endregion
 
         #region command methods
-        public event EventHandler CanExecuteChanged;
-        public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+        public bool CanExecute(object parameter) => _canExecute(parameter);
         public void Execute(object parameter) => _execute(parameter);
         #endregion
 
@@ -28,10 +33,10 @@ namespace ffmpegGUI.Commands
         public DelegateCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
             _execute = execute;
-            _canExecute = canExecute;
+            _canExecute = canExecute ?? ((param) => { return true; });
         }
         #endregion
 
-        public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        //public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }
