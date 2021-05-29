@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 
 namespace ClassLib.EnvironmentInfo
@@ -11,7 +9,7 @@ namespace ClassLib.EnvironmentInfo
     public static class EnvironmentInfo
     {
         #region CPUの最大スレッド数の取得
-        static int? mMaxThread;
+        static int? _mMaxThread;
         /// <summary>
         /// 最大スレッド数を取得する
         /// </summary>
@@ -19,10 +17,10 @@ namespace ClassLib.EnvironmentInfo
         {
             get
             {
-                if (mMaxThread.HasValue) return mMaxThread.Value;
+                if (_mMaxThread.HasValue) return _mMaxThread.Value;
                 ThreadPool.GetMinThreads(out var maxThread, out _);
-                mMaxThread = maxThread;
-                return mMaxThread.Value;
+                _mMaxThread = maxThread;
+                return _mMaxThread.Value;
             }
         }
         #endregion
