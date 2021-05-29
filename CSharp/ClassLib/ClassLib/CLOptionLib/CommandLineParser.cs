@@ -181,6 +181,8 @@ namespace CLOptionLib
 
             IsError = chkCommadLine() == false;
 
+            // check args method after day ...
+
             setValueToPropAndField();
         }
         #endregion
@@ -263,25 +265,64 @@ namespace CLOptionLib
         }
         #endregion
 
-
+        #region set value to property and field
+        /// <summary>
+        /// set value to property and field
+        /// </summary>
         void setValueToPropAndField()
         {
-            var memList = getAllCommandLineMember().ToList();
-
-            foreach (var mem in memList)
+            foreach (var mem in getAllCommandLineMember())
             {
                 var option = $"{c_Prefix}{(mem.GetCustomAttribute(typeof(CommandLineAttr)) as CommandLineAttr).CLOptionName}";
-                var memType = mem.DeclaringType;
-                object newVal;
-                if (memType == typeof(int)) newVal = int.Parse(OptValueDic[option]);
-                else if (memType == typeof(double)) newVal = double.Parse(OptValueDic[option]);
-                else if (memType == typeof(string)) newVal = OptValueDic[option];
-                else if (memType == typeof(bool)) newVal = OptValueDic.TryGetValue(option, _);
-                else newVal = null;
 
-                if (mem is PropertyInfo pi) pi.SetValue(null, newVal);
-                else if (mem is FieldInfo fi) fi.SetValue(null, newVal);
+                Type memType;
+                if (mem is PropertyInfo pi)
+                {
+                    memType = pi.PropertyType;
+                    if (tryGetOptionValue(memType, option, out var newVal) == false) continue;
+                    pi.SetValue(null, newVal);
+                }
+                else if (mem is FieldInfo fi)
+                {
+                    memType = fi.FieldType;
+                    if (tryGetOptionValue(memType, option, out var newVal) == false) continue;
+                    fi.SetValue(null, newVal);
+                }
             }
         }
+        #endregion
+
+        #region option value after cast type
+        /// <summary>
+        /// option value after cast type.
+        /// </summary>
+        /// <param name="memberType">member(property or field) type</param>
+        /// <param name="option">option name(Key of OptValueDic)</param>
+        /// <param name="val">out value</param>
+        /// <returns>true: success get, false: fail get</returns>
+        bool tryGetOptionValue(Type memberType, string option, out object val)
+        {
+            val = null;
+            // other type after day ...
+            if (memberType == typeof(int))
+            {
+                if (OptValueDic.TryGetValue(option, out var value) == false) return false;
+                val = int.Parse(value);
+            }
+            else if (memberType == typeof(double))
+            {
+                if (OptValueDic.TryGetValue(option, out var value) == false) return false;
+                val = double.Parse(value);
+            }
+            else if (memberType == typeof(string))
+            {
+                if (OptValueDic.TryGetValue(option, out var value) == false) return false;
+                val = value;
+            }
+            else if (memberType == typeof(bool)) val = OptValueDic.TryGetValue(option, out _);
+
+            return true;
+        }
+        #endregion
     }
 }
