@@ -73,6 +73,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\OperateMovieView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\SettingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -84,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\ViewModel\OperateMovieViewModel.cs" />
+    <Compile Include="MVVM\View\OperateMovieView.xaml.cs">
+      <DependentUpon>OperateMovieView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\SettingView.xaml.cs">
       <DependentUpon>SettingView.xaml</DependentUpon>
     </Compile>
