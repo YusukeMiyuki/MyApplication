@@ -15,7 +15,7 @@ namespace CLOptionLib
         #region private member
         Type _targetType;
         const string c_Prefix = "-";
-        const string c_PleaseHelp = "\n\nPlease reference help that you specify \" -h or -help\"";
+        readonly string _pleaseHelp = $"\n\nPlease reference help that you specify \" {c_Prefix}h or {c_Prefix}help\"";
         Dictionary<string, string> _optValueDic;
         List<CommandLineAttr> _commandLineAttrList;
         #endregion
@@ -41,7 +41,7 @@ namespace CLOptionLib
             get
             {
                 if (Args == null || Args.Any() == false) return false;
-                return Args.Any(x => x == "-h" || x == "-help");
+                return Args.Any(x => x == $"{c_Prefix}h" || x == $"{c_Prefix}help");
             }
         }
         /// <summary>
@@ -69,7 +69,7 @@ namespace CLOptionLib
 
                 sb.AppendLine();
 
-                foreach (var attr in allAttrs)
+                foreach (var attr in allAttrs.OrderBy(x => x.CLOptionName.Length))
                 {
                     sb.AppendLine($"{c_Prefix}{attr.CLOptionName}\t: {attr.HelpMessage}");
                 }
@@ -111,7 +111,7 @@ namespace CLOptionLib
                 {
                     if (opts.Contains(arg))
                     {
-                        // if options are duplicated, Exceptin occur.
+                        // if options are duplicated, Exception occur.
                         _optValueDic.Add(arg, string.Empty);
                         beforeOpt = arg;
                     }
@@ -181,7 +181,7 @@ namespace CLOptionLib
 
             IsError = chkCommadLine() == false;
 
-            // check args method after day ...
+            // implement checking args method after days ...
 
             setValueToPropAndField();
         }
@@ -257,7 +257,7 @@ namespace CLOptionLib
             {
                 if (Args.Contains(optName) == false)
                 {
-                    ErrorMessage = $"Error: Option {optName} is not specified.{c_PleaseHelp}";
+                    ErrorMessage = $"Error: Option {optName} is not specified.{_pleaseHelp}";
                     return false;
                 }
             }
@@ -299,11 +299,11 @@ namespace CLOptionLib
         /// <param name="memberType">member(property or field) type</param>
         /// <param name="option">option name(Key of OptValueDic)</param>
         /// <param name="val">out value</param>
-        /// <returns>true: success get, false: fail get</returns>
+        /// <returns>true: success getting, false: fail getting</returns>
         bool tryGetOptionValue(Type memberType, string option, out object val)
         {
             val = null;
-            // other type after day ...
+            // implement other type after days ...
             if (memberType == typeof(int))
             {
                 if (OptValueDic.TryGetValue(option, out var value) == false) return false;
@@ -320,6 +320,7 @@ namespace CLOptionLib
                 val = value;
             }
             else if (memberType == typeof(bool)) val = OptValueDic.TryGetValue(option, out _);
+            else return false;
 
             return true;
         }
